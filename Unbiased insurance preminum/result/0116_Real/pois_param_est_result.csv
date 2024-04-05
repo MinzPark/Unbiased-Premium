@@ -1,0 +1,10 @@
+"","beta.est.mean","beta.est.sd","beta.pval"
+"beta0",-3.04,0.35,0
+"TypeCity",0.7,0.37,0.0585
+"TypeCounty",1.83,0.37,0
+"TypeSchool",0.58,0.34,0.088
+"TypeTown",-1.42,0.43,0.001
+"TypeVillage",0.01,0.36,0.9778
+"c2",1.45,0.21,0
+"C3",2.41,0.22,0
+"a.hat",0.99,0.99,0.99
