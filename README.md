@@ -1,11 +1,12 @@
 # Overview
-** Unbiased Commercial Premium**
+**Unbiased Commercial Premium**
 This repository contains the code for our study on optimizing insurance premiums by combining the strengths of Bayesian and commercial premium approaches.
 
 # Proposed Optimal Premium
 Unbiasedness, which plays a significant role in insurance science, implies that the expected premium for the current year is a function of explanatory variables.  
 Specifically, the expected value of next year's premium, given the explanatory variables, is equal to the assumed distribution function:
-$$E[y_{t+1} | X] = \lambda $$ where $ \lambda \equiv exp(X\cdot \beta) $.
+$$E[y_{t+1} | X] = \lambda$$ 
+where $\lambda \equiv exp(X\cdot \beta)$.
 
 In fact,
 * Bayesian Premium: This approach efficiently fits previous conditions but can be difficult for policyholders to interpret.
@@ -16,7 +17,7 @@ We propose a method that optimizes the premium by combining the strengths of bot
 <details>
 	<summary>Futher study</summary>
   	<div markdown="1">
-      Additionally, we show that under certain conditions in a random effects setting, **the Bayesian premium can be equivalent to the commercial premium**, providing a straightforward and effective solution.
+      Additionally, we show that under certain conditions in a random effects setting, <b>the Bayesian premium can be equivalent to the commercial premium</b>, providing a straightforward and effective solution.
   	</div>
 </details>
 
@@ -28,10 +29,10 @@ The performance results of inefficient commercial premium can be found in Exampl
 And within the Numerical Study section, you can find the performance results of each model in both the Simulation and Real Data Study).
 
 ### Performance Measure
-* $ \rm{HMSE(y, \hat{y}})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}$
-  where $ y \sim F(mean = \lambda \cdot R), R \sim ~ \Pi$  
-* $ \rm{MSE(y, \hat{y})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(y_i - \hat{y_i})^2}$  
-* $ DIX(Prem) := \frac{Var(E(Prem|\lambda))}{Var(Prem)}$  
+* $\rm{HMSE(y, \hat{y}})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}$
+  where $y \sim F(mean = \lambda \cdot R), R \sim ~ \Pi$  
+* $\rm{MSE(y, \hat{y})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(y_i - \hat{y_i})^2}$  
+* $DIX(Prem) := \frac{Var(E(Prem|\lambda))}{Var(Prem)}$  
 
 
 ## Usage of File
