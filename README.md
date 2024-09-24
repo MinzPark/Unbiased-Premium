@@ -33,13 +33,19 @@ The performance results of inefficient commercial premium can be found in Exampl
 And within the Numerical Study section, you can find the performance results of each model in both the Simulation and Real Data Study).
 
 ### Performance Measure
-<div align="center">
-* $\rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}$  
+
+* $$
+  \rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}
+  $$  
   where $y \sim F(\text{mean} = \lambda \cdot R), R \sim \Pi$
   
-* $\rm{MSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(y_i - \hat{y_i})^2}$  
+* $$
+  \rm{MSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(y_i - \hat{y_i})^2}
+  $$  
   
-* $DIX(Prem) := \frac{\text{Var}(\mathbb{E}(Prem|\lambda))}{\text{Var}(Prem)}$
+* $$
+  DIX(Prem) := \frac{\text{Var}(\mathbb{E}(Prem|\lambda))}{\text{Var}(Prem)}
+  $$
 </div>
  
 ## Usage of File
