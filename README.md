@@ -37,6 +37,7 @@ And within the Numerical Study section, you can find the performance results of 
   $$
   \rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}
   $$
+  
   where $y \sim F(\text{mean} = \lambda \cdot R), R \sim \Pi$
 
   $$
