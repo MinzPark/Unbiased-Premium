@@ -5,9 +5,11 @@ This repository contains the code for our study on optimizing insurance premiums
 # Proposed Optimal Premium
 Unbiasedness, which plays a significant role in insurance science, implies that the expected premium for the current year is a function of explanatory variables.  
 Specifically, the expected value of next year's premium, given the explanatory variables, is equal to the assumed distribution function:  
-<div align="center">
-$$E[y_{t+1} | X] = \lambda$$ 
-</div>
+
+$$
+E[y_{t+1} | X] = \lambda
+$$ 
+
 where $\lambda \equiv exp(X\cdot \beta)$.
 
 In fact,
