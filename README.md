@@ -42,15 +42,51 @@ And within the Numerical Study section, you can find the performance results of 
 
  
 ## Usage of File
-|name|content|data|
-|---|---|---|
-|Pois_Gamma_RE.R|define function of all estimations under pois-gamma setting(including optimization, plot etc)||
-|NB_Gamma_RE.R|define function of all estimations under NB-gamma setting(including optimization, plot etc)||
-|R_example_Biasedness.R|performance of commerical permium for bayesI||
-|R_example_Biasedness_bayes2.R|performance of commerical permium for bayesII||
-|sim_Pois_Gamma_RE.R|compare performane of each premium(focused on credibility): SPrem, CPrem, GPrem||
-|sim_NB_Gamma_RE.R|compare performane of each premium(focused on credibility): SPrem, CPrem, GPrem||
-|real_data_Pois_Gamma.R|||
-|real_data_NB_Gamma.R|||
-
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Content</th>
+    <th bgcolor="#D3D3D3">Data</th>
+  </tr>
+  <tr>
+    <td>Pois_Gamma_RE.R</td>
+    <td>Defines functions for all estimations under Poisson-Gamma setting (including optimization, plots, etc.)</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>NB_Gamma_RE.R</td>
+    <td>Defines functions for all estimations under Negative Binomial-Gamma setting (including optimization, plots, etc.)</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>R_example_Biasedness.R</td>
+    <td>Performance of commercial premium for Bayesian model I</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>R_example_Biasedness_bayes2.R</td>
+    <td>Performance of commercial premium for Bayesian model II</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>sim_Pois_Gamma_RE.R</td>
+    <td>Compares performance of each premium (focused on credibility): SPrem, CPrem, GPrem under Poisson-Gamma setting</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>sim_NB_Gamma_RE.R</td>
+    <td>Compares performance of each premium (focused on credibility): SPrem, CPrem, GPrem under NB-Gamma setting</td>
+    <td bgcolor="#D3D3D3"></td>
+  </tr>
+  <tr>
+    <td>real_data_Pois_Gamma.R</td>
+    <td>Real data analysis comparing each model's performance under Poisson-Gamma setting</td>
+    <td">data_train.csv, data_valid.csv</td>
+  </tr>
+  <tr>
+    <td>real_data_NB_Gamma.R</td>
+    <td>Real data analysis comparing each model's performance under NB-Gamma setting</td>
+    <td>data_train.csv, data_valid.csv</td>
+  </tr>
+</table>
 
