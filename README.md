@@ -7,7 +7,7 @@ Unbiasedness, which plays a significant role in insurance science, implies that 
 Specifically, the expected value of next year's premium, given the explanatory variables, is equal to the assumed distribution function:  
 
 $$
-E[y_{t+1} | X] = \lambda
+E[y_{t} | X] = \lambda
 $$ 
 
 where $\lambda \equiv exp(X\cdot \beta)$.
@@ -35,7 +35,7 @@ And within the Numerical Study section, you can find the performance results of 
 ### Performance Measure
 
   $$
-  \rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}
+  \rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R_i - \hat{y_i})^2}
   $$
   
   where $y \sim F(\text{mean} = \lambda \cdot R), R \sim \Pi$
