@@ -3,13 +3,8 @@
 # Load data
 #####################################################
 
-#setwd("C:/Users/none/Desktop/대학원/논문/data")
 
-# setwd("C:/Users/parkminji/Downloads/민지/data")
-# source("repeated_data_management.R")
-
-#setwd("C:/Users/none/Desktop/대학원/논문/data")
-
+set.seed(1234)
 path <- "C:/Users/none/Desktop/대학원/논문" # Download path 
 
 setwd(path)
@@ -18,11 +13,10 @@ path_ftn <- paste0(path, "/Unbiased insurance preminum")
 
 ifelse(dir.exists(paste0(path_ftn,"\\m3_alpha0_plot")),F, dir.create(paste0(path_ftn,"\\m3_alpha0_plot")) ) 
 
-
-#setwd("C:/Users/parkminji/Downloads/민지/data")
-source("./data/repeated_data_management.R")
 source(paste0(path_ftn,"/lamb_kappa.R"))
-summary(data.train)
+
+data.train <- read.csv('./data/data_train.csv')
+data.valid <- read.csv('./data/data_valid.csv')
 
 dim(data.train)
 dim(data.valid)
@@ -62,17 +56,10 @@ data.valid <- combine_kappa_level(data.valid)
 # estimate a.hat, lambda.hat, R, beta.hat using nimble
 #####################################################
 
-
-##########chk which difference btw Ohrosy and us conclusion?
-# 1. comparison of ratio of each parameter
-# 각 x의 variable이 차지하는 percentage가오로지 교수님과 약간씩 차이남.
-# 별로 차이가 크진 않으나, 약간씩 차이를 보임. -> 유의미한 이유라고 생각되지 않음.
-# 2. beta.hat의 추정 범위가 너무 큰거 아닐까? -> sd를 1로 줄여도 같은 결과 도출 x
 round(apply(data.train, 2, mean)*100,2) 
 
 # Make design matrix 
 X = model.matrix(n~TypeCity+TypeCounty+TypeSchool+TypeTown+TypeVillage+C2+C3, data = data.train)
-#X = model.matrix(n~TypeCity+TypeCounty+TypeMisc+TypeTown+TypeSchool+C2+C3, data = data.train)
 
 
 model <- nimbleCode({
@@ -88,7 +75,7 @@ model <- nimbleCode({
     R[n] ~ dgamma(mean=1, sd=1/sqrt(a.hat))
   }
   
-  # prior of Betas (params 개수 만큼 추출)
+  # prior of Betas 
   for(j in 1:KK){
     beta.hat[j] ~ dnorm(mean=0, sd=5)
   } 
@@ -115,7 +102,6 @@ n.iter <- 12000
 n.burnin <- 2000
 n.chains <- 2
 
-set.seed(123)
 samples <- runMCMC(CMCMC, niter = n.iter,
                    nburnin = n.burnin,
                    nchains = n.chains)
@@ -181,7 +167,7 @@ param_result
 # Fill missing data for Y's using Y's distn assumption(ex rpois(mean= lambda * R, phi) with sampled R.hat , lambda.hat
 #####################################################
 
-# Y 구성
+# Y 
 tau = 5 ; Y = data.frame(matrix(nrow = length(id_uniq), ncol = tau))
 
 
@@ -192,21 +178,17 @@ for(i in 1:length(id_uniq)){
     Y[i,j] = ys[j]
   }
 }
-#Y$n <- data.valid$n # target은 이름이 n인 열로 구성
 
 colnames(Y) <- c("y_1", "y_2", "y_3",  "y_4", "y_5", "ID")
 
 # Sample R.hat and select randomly R.hat[1] for each PolicyNum
 
-set.seed(123)
 
 R.hat <- rep(0, 497)
 for(i in 1:497){
   R.hat[i] <- sample(samples$chain1[,paste0("R[", i, "]")],1)
 }
 
-# lambda vector per PolicyNum
-# lambda_id = data.frame(unique(cbind(data.train$PolicyNum, lambda.hat))); colnames(lambda_id) <- c('ID', 'lambda.hat_per_id')
 lambda_id = data.frame(unique(cbind(data.train[,c("PolicyNum","lamb_kappa")], lambda.hat))); colnames(lambda_id) <- c('ID',"lambda_kappa_level", 'lambda.hat_per_id')
 
 ############################################
@@ -215,8 +197,6 @@ lambda_id = data.frame(unique(cbind(data.train[,c("PolicyNum","lamb_kappa")], la
 table(lambda_id[,'lambda.hat_per_id']);
 round(table(lambda_id[,'lambda.hat_per_id'])/497,3);
 
-
-# 결측치 채우기
 for (i in 1:nrow(Y)){
   for (j in 1:tau){
     if (is.na(Y[i,j])==TRUE)
@@ -226,9 +206,6 @@ head(Y)
 
 # total Y : columns = ID, y_1,y_2,y_3,y_4, y_5, lambda.hat_per_ID
 total <- merge(Y, lambda_id, by = 'ID')
-
-
-# tau+1의 Y값이 있는 data.valid를 이용해 ID로 병합함. 
 total <- merge(total, data.valid[,c('PolicyNum','n')], by.x = "ID", by.y = 'PolicyNum') 
 
 head(total, 20)
@@ -280,7 +257,7 @@ round(table(lambda_id[idx, ]$lambda.hat_per_id)/dim(data.valid)[1], 3);
 # Import function to measure Cred for Bulhmann, Comm, Generalized Comm with Pois-Gamma Random Effect Model
 #####################################################
 
-# 시뮬레이션에선 분포에서 추출했으나 Y에 대해 데이터 프레임 설정
+# fill the Y given estimated R.hat
 
 Y <- total[,c('y_1','y_2','y_3','y_4','y_5','n')]
 
@@ -297,17 +274,9 @@ lam_vec <- lambda_id[idx,'lambda.hat_per_id']; #379
 # import function to calculate each model
 source(paste0(path_ftn,"/Pois_Gamma_RE.R"))
 
-
-
-
-
-# 각 모델에 대한 mod2의 알파0,알파1과 mod3의 알파0 계산
 P <- prop_coeff(lam_vec, a, tau)
-
 m2_alpha1 = (P["E_lam_y"] * P["E_lamsq_ybar"] - P["E_lam_y_ybar"] * mean(lam_vec^2))       /(P["E_lamsq_ybar"]^2-P["E_lamsq_ybarsq"]*mean(lam_vec^2))
 m2_alpha0 = (P["E_lamsq_ybar"] * P["E_lam_y_ybar"] - P["E_lam_y"] * P["E_lamsq_ybarsq"])/(P["E_lamsq_ybar"]^2-P["E_lamsq_ybarsq"]*mean(lam_vec^2))
-
-# m3에 대한 alpha0 
 
 result_alpha0 <- optim(par = c(0), 
                 fn = optim_alpha , 
@@ -315,10 +284,6 @@ result_alpha0 <- optim(par = c(0),
                 control = list(fnscale = 1), method="BFGS")
 
 
-
-
-
-# alpha 최적일때 err값
 (optim_alpha(lam_vec, Y, par=c(result_alpha0$par)))
 
 m3_alpha0 <- result_alpha0$par
@@ -330,7 +295,7 @@ m3_alpha0_seq <- seq(0,1,length = 30)
 MSE_alpha0 <- rep(0, length(m3_alpha0_seq))
 
 for(i in 1: length(m3_alpha0_seq)){
-  # 각 모델별 예측값 추출
+
   Yhat <- Yhat_ftn( N_sim, n_model, tau, lam_vec, Y, m2_alpha0, m2_alpha1, m3_alpha0 = m3_alpha0_seq[i])
   # calculate HMSE of Gprem to check which is the best alpha0
   MSE_alpha0[i] <- cal_pred(lam_vec, Y = Y[,tau+1], Theta = R, type = 'MSE', Prem = Yhat[,3])
@@ -356,17 +321,9 @@ png(filename='real.nb.png',width=2200,height=2200)
 x_axis_tick=seq(0,1,length=5)
 y_axis_tick=round(seq(min(MSE_alpha0),max(MSE_alpha0),length=5),2)
 
-# 왜 5개의 tick이 안나오지?? ㅜㅜ
-#for(i in 1: length(x_axis_tick)){
-#   # 각 모델별 예측값 추출
-#   Yhat_xtick <- Yhat_ftn( N_sim, n_model, tau, lam_vec, Y, m2_alpha0, m2_alpha1, m3_alpha0 = x_axis_tick[i])
-#   # calculate HMSE of Gprem to check which is the best alpha0
-#   y_axis_tick[i] <- cal_pred(lam_vec, Y = Y[,tau+1], Theta = R, type = 'MSE', Prem = Yhat_xtick[,3])
-# }
-
 png(filename='real.pois.png',width=2200,height=2000)
 par(oma = c(1,1,1,1))
-par(mar=c(25,25,25,5)) # mar=c(아래,왼쪽,위,오른쪽)
+par(mar=c(25,25,25,5))
 oldp <- par(mgp = c(3,6.5,0.5))
 
 
@@ -387,25 +344,17 @@ points(m3_alpha0, best_MSE,pch = 17, cex = 8)
 dev.off()
 
 
-
-
-# # 각 모델별 예측값 추출 
-# Yhat <- Yhat_ftn( N_sim, n_model, tau, lam_vec, Y, m2_alpha0, m2_alpha1, m3_alpha0)
-
-
-# real data의 경우 MSE만 산출함. (왜냐면 R이 우리에게 없다고 가정하기 때문)
 MAE = HMSE = MSE <- rep(0, n_model)
 for(i in (1:n_model)){
   MSE[i] <- cal_pred(lam_vec, Y = Y[,tau+1], Theta = R, type = 'MSE', Prem = Yhat[,i])
   HMSE[i] <- cal_pred(lam_vec, Y = Y[,tau+1], Theta = R.hat[idx], type='HMSE', Prem = Yhat[,i])
-  MAE[i] <- cal_pred(lam_vec, Y = Y[,tau+1], Theta = R, type = 'MAE', Prem = Yhat[,i])
 }
 
 # Unbiasedness for CPrem DIX
 m2_DIX <- cal_UB(lam_vec, a, alpha0 = m2_alpha0,alpha1 = m2_alpha1 )
 
-# to data.frame each criterion value(MSE, HMSE, MAE) for each model(Spre, Cprem, GCPrem)
-criterion.result <- data.frame(rbind(MSE,HMSE, MAE)); 
+# to data.frame each criterion value(MSE, HMSE) for each model(Spre, Cprem, GCPrem)
+criterion.result <- data.frame(rbind(MSE,HMSE)); 
 colnames(criterion.result) <- c("Sprem","Cprem","GCprem")
 criterion.result <- rbind(criterion.result,c(0,m2_DIX[1],0))
 rownames(criterion.result)[4] <- 'DIX'
