@@ -1,11 +1,11 @@
 # Overview
-**Unbiased Commercial Premium**
+**Unbiased Commercial Premium**  
 This repository contains the code for our study on optimizing insurance premiums by combining the strengths of Bayesian and commercial premium approaches.
 
 # Proposed Optimal Premium
 Unbiasedness, which plays a significant role in insurance science, implies that the expected premium for the current year is a function of explanatory variables.  
-Specifically, the expected value of next year's premium, given the explanatory variables, is equal to the assumed distribution function:
-$$E[y_{t+1} | X] = \lambda$$ 
+Specifically, the expected value of next year's premium, given the explanatory variables, is equal to the assumed distribution function:  
+$$E[y_{t+1} | X] = \lambda$$   
 where $\lambda \equiv exp(X\cdot \beta)$.
 
 In fact,
@@ -29,12 +29,14 @@ The performance results of inefficient commercial premium can be found in Exampl
 And within the Numerical Study section, you can find the performance results of each model in both the Simulation and Real Data Study).
 
 ### Performance Measure
-* $\rm{HMSE(y, \hat{y}})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}$
-  where $y \sim F(mean = \lambda \cdot R), R \sim ~ \Pi$  
-* $\rm{MSE(y, \hat{y})}:= \frac{1}{N} \cdot \sum_limit{i=1}^{N}{(y_i - \hat{y_i})^2}$  
-* $DIX(Prem) := \frac{Var(E(Prem|\lambda))}{Var(Prem)}$  
+* $\rm{HMSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(\lambda_i \cdot R - \hat{y_i})^2}$  
+  where $y \sim F(\text{mean} = \lambda \cdot R), R \sim \Pi$
+  
+* $\rm{MSE}(y, \hat{y}) := \frac{1}{N} \cdot \sum_{i=1}^{N}{(y_i - \hat{y_i})^2}$  
+  
+* $DIX(Prem) := \frac{\text{Var}(\mathbb{E}(Prem|\lambda))}{\text{Var}(Prem)}$
 
-
+ 
 ## Usage of File
 |name|content|data|
 |---|---|---|
