@@ -1,9 +1,8 @@
 # import function to calculate each model
  
-path <- "C:/Users/parkminji/Downloads/0912/0911"# Download path 
+path <- "C:/Users/user/Downloads/Unbiased-Premium-main/Unbiased-Premium-main" # Download path 
 setwd(path)
 set.seed(123)
-#path_ftn <- paste0(path,'/Unbiased insurance preminum')
 path_ftn <- path
 source(paste0(path_ftn,"/Pois_Gamma_RE.R"))
 
@@ -87,7 +86,9 @@ for(lam in 1:dim(total_lam)[1]){
       CPost.bayes_dix[iter, 'dix'] <- apply(CPost.bayes_mean[iter,],1,function(x){var(x)}) /var(CPost.bayes,na.rm = TRUE)
       
       # mse
-      CPost.bayes_mse[iter, 'mse'] <- mean((Ns[,(tau+1)] - lam_vec * CPost.bayes )^2, na.rm = TRUE) 
+      threshold <- quantile(CPost.bayes, na.rm = TRUE, 0.98) # remove outlier due to param given the assumped distn 
+      threshold.idx <-which(CPost.bayes < threshold)
+      CPost.bayes_mse[iter, 'mse'] <- mean((Ns[threshold.idx,tau+1] -  lam_vec[threshold.idx] * CPost.bayes[threshold.idx])^2, na.rm = TRUE) 
       
       
       #CPost cred
