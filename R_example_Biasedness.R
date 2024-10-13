@@ -9,7 +9,7 @@ total_lam <- matrix(c(3,1,4,6),nrow = 2, ncol =2)
 nsim= 1000
 
 tau=c(3,10)
-a = c(2)
+a = c(2,10)
 
 
 
