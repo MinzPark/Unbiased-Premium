@@ -2,7 +2,7 @@
  
 path <- "C:/Users/user/Downloads/Unbiased-Premium-main/Unbiased-Premium-main" # Download path 
 setwd(path)
-set.seed(123)
+
 path_ftn <- path
 source(paste0(path_ftn,"/Pois_Gamma_RE.R"))
 
