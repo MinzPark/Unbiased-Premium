@@ -1,20 +1,15 @@
 # import function to calculate each model
-#path <- "/Users/baengminji/Downloads/대학원/논문" # Download path 
-#path <- "C:/Users/user/Downloads/Unbiased_Premium" # Download path 
-#setwd(path)
-path <- "C:/Users/user/Downloads/Unbiased_Premium" # Download path 
-path <- "C:/Users/parkminji/Downloads/0912/0911"
-#path_ftn <- paste0(path,'/Unbiased insurance preminum')
+
+path <- "C:/Users/user/Downloads/Unbiased-Premium-main/Unbiased-Premium-main" # Download path 
 path_ftn <- path
 source(paste0(path_ftn,"/Pois_Gamma_RE.R"))
 
 total_lam <- matrix(c(3,1,4,6),nrow = 2, ncol =2)
-set.seed(123)
 
 nsim= 1000
 
 tau=c(3,10)
-a = c(2,10)
+a = c(2)
 
 
 
@@ -84,7 +79,9 @@ for(lam in 1:dim(total_lam)[1]){
       CPost.bayes_dix[iter, 'dix'] <- apply(CPost.bayes_mean[iter,],1,function(x){var(x)}) /var(CPost.bayes,na.rm = TRUE)
       
       # mse
-      CPost.bayes_mse[iter, 'mse'] <- mean((Ns[,tau+1] -  lam_vec * CPost.bayes)^2, na.rm = TRUE) 
+      threshold <- quantile(CPost.bayes, na.rm = TRUE, 0.98) # remove outlier due to param given the assumped distn 
+      threshold.idx <-which(CPost.bayes < threshold)
+      CPost.bayes_mse[iter, 'mse'] <- mean((Ns[threshold.idx,tau+1] -  lam_vec[threshold.idx] * CPost.bayes[threshold.idx])^2, na.rm = TRUE) 
       
       #CPost cred
       P <- prop_coeff(lam_vec, a, tau)
@@ -96,14 +93,8 @@ for(lam in 1:dim(total_lam)[1]){
       CPost.cred_mean[iter, "lamb1"] <- mean(CPost.cred[id_lam.1])
       CPost.cred_mean[iter, "lamb2"] <- mean(CPost.cred[id_lam.2])
       # dix
-      cat('iteration =',iter)
-
       CPost.cred_dix[iter, 'dix'] <- apply(CPost.cred_mean[iter,],1,function(x){var(x)}) /var(CPost.cred,na.rm = TRUE)
-      print((m2_alpha1^2) * CPost.cred_dix[iter, 'dix'])
-      print("alpha1 : ")
-      print(m2_alpha1)
 
-      print("===========================")
       
       # mse
       CPost.cred_mse[iter, 'mse'] <- mean((Ns[,tau+1] -  lam_vec * CPost.cred)^2, na.rm = TRUE) 
