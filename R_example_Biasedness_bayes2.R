@@ -101,16 +101,8 @@ for(lam in 1:dim(total_lam)[1]){
       CPost.cred_mean[iter, "lamb1"] <- mean(CPost.cred[id_lam.1])
       CPost.cred_mean[iter, "lamb2"] <- mean(CPost.cred[id_lam.2])
       
-      # dix
-      cat('iteration =',iter)
-      
+      # dix    
       CPost.cred_dix[iter, 'dix'] <- apply(CPost.cred_mean[iter,],1,function(x){var(x)}) /var(CPost.cred,na.rm = TRUE)
-      print(CPost.cred_dix[iter, 'dix'])
-      
-      print("alpha1 : ")
-      print(m2_alpha1)
-
-      print("===========================")
       
       # mse
       CPost.cred_mse[iter, 'mse'] <- mean((Ns[,tau+1] -  lam_vec * CPost.cred)^2, na.rm = TRUE) 
